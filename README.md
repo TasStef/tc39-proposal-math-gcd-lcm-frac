@@ -16,6 +16,6 @@ JavaScript's Math object currently lacks several small, deterministic numeric ut
 Math.gcd(8,12); // 4
 Math.lcm(4,6);  // 12
 Math.frac(8.345); // 0.345
-jjj
-You can browse the [ecmarkup output](https://ACCOUNT.github.io/PROJECT/)
-or browse the [source](https://github.com/ACCOUNT/PROJECT/blob/HEAD/spec.emu).
+
+You can browse the [ecmarkup output](https:TasStef.github.io/tc39-proposal-math-gcd-lcm-frac)
+or browse the [source](https://github.com/TasStef/tc39-proposal-math-gcd-lcm-frac/blob/HEAD/spec.emu).
