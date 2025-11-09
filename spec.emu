@@ -37,7 +37,7 @@ const simplified = [8/gcd, 12/gcd]; // [2,3]</code></pre>
 <emu-example>
 <p><b>3. Working with fractional parts:</b></p>
 <pre><code>Math.frac(8.345); // 0.345
-Math.frac(-2.7);  // 0.7</code></pre>
+Math.frac(-2.7);// 0.7</code></pre>
 </emu-example>
 </emu-clause>
 
