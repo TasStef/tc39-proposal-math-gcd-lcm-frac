@@ -4,36 +4,101 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 <script src="./spec.js"></script>
 <pre class="metadata">
-title: Proposal Title Goes Here
-stage: -1
-contributors: Your Name(s) Here
+title: Enhance Math library with Math.gcd(), Math.lcm(), and Math.frac()
+stage: 0
+contributors: Tasos Stefanidis (independent contributor)
 </pre>
 
-<emu-clause id="sec-demo-clause">
-  <h1>This is an emu-clause</h1>
-  <p>This is an algorithm:</p>
-  <emu-alg>
-    1. Let _proposal_ be *undefined*.
-    1. If IsAccepted(_proposal_) is *true*, then
-      1. Let _stage_ be *0*<sub>ℤ</sub>.
-    1. Else,
-      1. Let _stage_ be *-1*<sub>ℤ</sub>.
-    1. Return ? ToString(_stage_).
-  </emu-alg>
+<emu-clause id="motivation">
+  <h1>Motivation</h1>
+  <p>JavaScript's <code>Math</code> object currently lacks several basic mathematical utilities that are standard in many other programming languages.</p>
+  <ul>
+    <li><b>Greatest Common Divisor (<code>gcd</code>)</b>: useful in ratios, cryptography, and numeric simplification.</li>
+    <li><b>Least Common Multiple (<code>lcm</code>)</b>: important for scheduling, modular arithmetic, and data alignment.</li>
+    <li><b>Fractional Part (<code>frac</code>)</b>: used in graphics, randomization, and mathematical analysis.</li>
+  </ul>
+  <p>Adding these functions natively improves readability, reduces errors, and avoids repetitive user-space implementations.</p>
 </emu-clause>
 
-<emu-clause id="sec-is-accepted" type="abstract operation">
-  <h1>
-      IsAccepted (
-        _proposal_: an ECMAScript language value
-      ): a Boolean
-  </h1>
-  <dl class="header">
-    <dt>description</dt>
-    <dd>Tells you if the proposal was accepted</dd>
-  </dl>
-  <emu-alg>
-    1. If _proposal_ is not a String, or is not accepted, return *false*.
-    1. Return *true*.
-  </emu-alg>
+<emu-clause id="use-cases">
+<h1>Use Cases</h1>
+
+<emu-example>
+<p><b>1. Simplifying fractions:</b></p>
+<pre><code>const gcd = Math.gcd(8,12); // 4
+const simplified = [8/gcd, 12/gcd]; // [2,3]</code></pre>
+</emu-example>
+
+<emu-example>
+<p><b>2. Scheduling repeating events:</b></p>
+<pre><code>Math.lcm(4,6); // 12 → they coincide every 12 units</code></pre>
+</emu-example>
+
+<emu-example>
+<p><b>3. Working with fractional parts:</b></p>
+<pre><code>Math.frac(8.345); // 0.345
+Math.frac(-2.7);// 0.7</code></pre>
+</emu-example>
 </emu-clause>
+
+<emu-clause id="description">
+  <h1>Description</h1>
+  <ul>
+    <li><code>Math.gcd(...values)</code> – returns the greatest common divisor of two or more integers.</li>
+    <li><code>Math.lcm(...values)</code> – returns the least common multiple of two or more integers.</li>
+    <li><code>Math.frac(x)</code> – returns the fractional part of a number (<code>abs(x % 1)</code>).</li>
+  </ul>
+</emu-clause>
+
+<emu-clause id="comparison">
+  <h1>Comparison</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Language</th><th>gcd</th><th>lcm</th><th>frac</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>C</td><td>gcd</td><td>lcm</td><td>fmod</td>
+      </tr>
+      <tr>
+        <td>Python</td><td>math.gcd</td><td>math.lcm</td><td>math.modf(x)[0]</td>
+      </tr>
+      <tr>
+        <td>Rust</td><td>num::integer::gcd</td><td>num::integer::lcm</td><td>fract()</td>
+      </tr>
+    </tbody>
+  </table>
+</emu-clause>
+
+<emu-clause id="implementations">
+<h1>Implementations</h1>
+<pre><code>
+    Math.gcd = (...nums) => {
+        const gcd2 = (a, b) => b ? gcd2(b, a % b) : Math.abs(a);
+        return nums.reduce((a, b) => gcd2(a, b));
+    };
+
+    Math.lcm = (...nums) => {
+        const gcd2 = (a, b) => b ? gcd2(b, a % b) : Math.abs(a);
+        const lcm2 = (a, b) => Math.abs(a * b) / gcd2(a, b);
+        return nums.reduce((a, b) => lcm2(a, b));
+    };
+
+    Math.frac = x => Math.abs(x % 1);
+</code></pre>
+</emu-clause>
+
+<emu-clause id="qa">
+  <h1>Q&A</h1>
+  <p><b>Q:</b> Why do we need built-ins instead of user-space implementations?</p>
+  <p><b>A:</b> Built-ins improve performance, reduce boilerplate, and ensure consistency.</p>
+
+  <p><b>Q:</b> Can these functions be composed from existing primitives?</p>
+  <p><b>A:</b> Yes, but that requires repetitive code which reduces clarity and increases errors.</p>
+
+  <p><b>Q:</b> Why group gcd, lcm, and frac together?</p>
+  <p><b>A:</b> They are small, deterministic numeric utilities that complement each other in the <code>Math</code> namespace.</p>
+</emu-clause>
+
